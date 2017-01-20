@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<mappers>
+		<mapper resource="com/fpt/vnc/dn_nhomchitieu/sql/dinhnghianhomchitieu.xml" />
+		<mapper resource="com/fpt/vnc/dn_thoidiemcungcapdulieu/sql/dnThoiDiemCungCapDuLieu.xml"/>
+		<mapper resource="com/fpt/vnc/ds_trangthai/sql/trangthaisql.xml"/>
+	</mappers>
+	
+</configuration>

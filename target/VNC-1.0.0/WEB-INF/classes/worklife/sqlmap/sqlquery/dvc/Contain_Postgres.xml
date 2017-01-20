@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.administrativeprocedures.service.ContainService">
+	<resultMap type="ContainVO" id="containVO">
+		<result property="iddmNoiDung" column="iddmnoidung"/>
+		<result property="noiDung" column="noidung"/>
+	</resultMap>
+	
+	<select id="loadListContain" resultMap="containVO">
+		SET search_path TO 'portal';
+		SELECT * FROM dmnoidung_hanhchinh
+		ORDER BY iddmnoidung
+	</select>
+</mapper>

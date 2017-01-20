@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.administrativeprocedures.service.ProcedureAdministrativeService">
+	<resultMap type="ProcedureAdministrativeVO" id="procedureAdministrativeVO">
+		<result property="idThuTucHanhChinh" column="idthutuchanhchinh"/>
+		<result property="maQuyTrinh" column="maquytrinh"/>
+		<result property="tenQuyTrinh" column="tenquytrinh"/>
+		<result property="capXuly" column="cap"/>
+		<result property="hetSuDung" column="hetsudung"/>
+	</resultMap>
+	<resultMap type="ProcedureAdministrativeVO" id="selectProcedureAdministrativeVO">
+		<result property="idThuTucHanhChinh" column="idthutuchanhchinh"/>
+		<result property="maQuyTrinh" column="maquytrinh"/>
+		<result property="tenQuyTrinh" column="tenquytrinh"/>
+		<result property="capXuly" column="cap"/>
+		<result property="hetSuDung" column="hetsudung"/>
+	</resultMap>
+	
+	<insert id="insertProcedureAdministrative" parameterType="ProcedureAdministrativeVO">
+		SET search_path TO 'portal';
+		<selectKey keyProperty="idThuTucHanhChinh" resultType="int" order="AFTER">
+			 SELECT currval('thutuc_hanhchinh_idthutuchanhchinh_seq');
+		</selectKey>
+		INSERT INTO thutuc_hanhchinh	(
+							maquytrinh,
+							tenquytrinh,
+							cap,
+							hetsudung
+					)
+					VALUES				(
+							#{maQuyTrinh},
+							#{tenQuyTrinh},
+							#{capXuly},
+							#{hetSuDung}
+					)
+	</insert>
+	<select id="loadProcedureAdministrative" resultMap="procedureAdministrativeVO">
+		SET search_path TO 'portal';
+		SELECT 	idthutuchanhchinh,
+				maquytrinh,
+				tenquytrinh,
+				cap,
+				hetsudung
+        FROM 	thutuc_hanhchinh
+        WHERE	idthutuchanhchinh = #{idThuTucHanhChinh}
+	</select>
+	<update id="updateProcedureAdministrative" parameterType="ProcedureAdministrativeVO">
+		SET search_path TO 'portal';
+		UPDATE	thutuc_hanhchinh
+		SET		maquytrinh = #{maQuyTrinh},
+				tenquytrinh = #{tenQuyTrinh},
+				cap = #{capXuly},
+				hetsudung = #{hetSuDung}
+		WHERE	idthutuchanhchinh = #{idThuTucHanhChinh}
+	</update>
+	<select id="selectProcedureAdministrative" parameterType="ProcedureAdministrativeVO" resultMap="selectProcedureAdministrativeVO">
+		SET search_path TO 'portal';
+		SELECT 	idthutuchanhchinh,
+				maquytrinh,
+				tenquytrinh,
+				cap,
+				hetsudung
+        FROM 	thutuc_hanhchinh
+        WHERE	cap = #{capXuly}
+       <if test="columnName != '' and columnName != null">
+            <if test="typeOrder != '' and typeOrder != null">
+                ORDER BY
+                <if test="columnName == 'tenbieumau'">
+                    tenquytrinh
+                </if>
+                <if test="columnName == 'hetsudung'">
+                    hetsudung
+                </if>
+                <if test="typeOrder == 'desc'">
+                    DESC
+                </if>
+                <if test="typeOrder == 'asc'">
+                    ASC
+                </if>
+            </if>
+        </if>
+        LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+	<select id="coutProcedureAdministrative" parameterType="ProcedureAdministrativeVO" resultType="Integer">
+		SET search_path TO 'portal';
+		SELECT	COUNT(*)
+		FROM	thutuc_hanhchinh
+		WHERE 	cap = #{capXuly}
+	</select>
+	<select id="selectListProcedureAdministrativeClient" resultMap="selectProcedureAdministrativeVO" parameterType="ProcedureAdministrativeVO">
+		SET search_path TO 'portal';
+		SELECT 	idthutuchanhchinh,
+				maquytrinh,
+				tenquytrinh,
+				cap,
+				hetsudung
+        FROM 	thutuc_hanhchinh
+        WHERE	cap = #{capXuly}
+        AND		hetsudung != true
+	</select>
+</mapper>

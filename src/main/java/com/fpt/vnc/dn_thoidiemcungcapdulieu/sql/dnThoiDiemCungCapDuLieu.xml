@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="dnThoiDiemCungCapDuLieu_sql">
+
+    <resultMap type="com.fpt.vnc.dn_thoidiemcungcapdulieu.dto.DNThoiDiemCungCapDuLieuDTO" id="DNThoiDiemCungCapDuLieuDTO">
+        <result property="soHieu" column="tenbochitieu"/>
+        <result property="tenBieuMau" column="tenbochitieu"/>
+        <result property="donVi" column="tenbochitieu"/>
+        <result property="kyBaoCao" column="tenbochitieu"/>
+        <result property="ngayTao" column="tenbochitieu"/>
+        <result property="nguoiSua" column="tenbochitieu"/>
+        <result property="hieuLuc" column="tenbochitieu"/>
+    </resultMap>
+     
+    <select id="selectAll" resultMap="DNThoiDiemCungCapDuLieuDTO">
+        SELECT * FROM fpt_bochitieu
+    </select>
+    
+</mapper>

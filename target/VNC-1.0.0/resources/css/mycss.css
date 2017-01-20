@@ -1,0 +1,67 @@
+/* /* body {
+
+}
+
+.vnc-page-header{ margin-top: 30px}
+
+.table-thead{ background: #f8fcff; font-size: 13px; height: 42px; color: #005694;}
+.table-body{ font-size: 13px;}
+.row-left{ text-align: left; vertical-align: middle;}
+.row-center{ text-align: center; vertical-align: middle;}
+
+table.dataTable {
+    clear: both;
+    margin-top: 0px !important;
+    margin-bottom: 6px !important;
+    max-width: none !important;
+}
+
+.label-title{ color: #006fbd; font-size: 23px !important; padding-right: 0px !important; padding-left: 0px !important}
+.button-title{ text-align:right; padding-right: 0px !important; padding-left: 0px !important}
+
+.search-label{font-size: 13px; color:#333; font-weight:bold}
+.info-label{font-size: 13px; color:#333;}
+
+.z-button-image{margin-right:7px;margin-top:-2px}
+
+.mis-thead {
+	border-top: 1px solid #e3e3e3;
+	border-right: 1px solid #e3e3e3;
+	border-left: 1px solid #e3e3e3;
+	border-bottom: 1px solid #e3e3e3;
+}
+
+.mis-bdr-green {border-left: 3px solid #79c455;}
+.mis-bdr-blue{border-left:3px solid #5191d1;}
+.mis-bdr-orange{border-left:3px solid #da5716;}
+
+.mis-thead .z-span {
+	padding: 13px 10px 11px 10px; display: block;
+}
+
+.mis-thead .z-label {
+	font-size: 14px;
+	display: block;
+	color: #000;
+	text-transform: uppercase;
+	font-weight: bold;
+	
+}
+
+.mis-box-search {
+	background-color: #fff;
+	border: 1px solid #e3e3e3;
+	padding: 13px 14px 14px 12px;
+	margin-bottom: 10px;
+	*zoom: 1
+}
+
+status
+.vnc-status-dangsoan,.vnc-status-ctpd,.vnc-status-tpdd,.vnc-status-cldd,.vnc-status-lddd,.vnc-status-dagui,.vnc-status-public{padding-left:20px !important;vertical-align:middle}
+.vnc-status-dangsoan{color:#5191d1 !important;background:url(../img/status-ds.png) no-repeat 3px 4px}
+.vnc-status-ctpd{color:#d58c00 !important;background:url(../img/status-cpd.png) no-repeat 3px 4px}
+.vnc-status-tpdd{color:#0098be !important;background:url(../img/status-tpdd.png) no-repeat 3px 4px}
+.vnc-status-lddd{color:#00aa4c !important;background:url(../img/status-lddd.png) no-repeat 3px 4px}
+.vnc-status-dagui{color:#0041c6 !important;background:url(../img/status-dg.png) no-repeat 3px 4px}
+.vnc-status-cldd{color:#444 !important;background:url(../img/status-hhl.png) no-repeat 3px 4px}
+.vnc-status-public{color:#e44317 !important;background:url(../img/icon-puplic.png) no-repeat 0 1px} */ */

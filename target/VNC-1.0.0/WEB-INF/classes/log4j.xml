@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!-- Appenders -->
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-5p: %c - %m%n"/>
+        </layout>
+    </appender>
+    <appender name="DB" class="org.apache.log4j.jdbc.JDBCAppender">
+        <param name="driver" value="org.postgresql.Driver"/>
+        <param name="URL" value="jdbc:postgresql://10.86.140.130:5432/viennc"/>
+        <param name="user" value="postgres"/>
+        <param name="password" value="123456"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="INSERT INTO logger(description, package, level, date)  VALUES ('%m', '%c', '%p', to_timestamp('%d', 'YYYY-MM-DD HH24:MI:SS,MS'))"
+                    />
+        </layout>
+    </appender>
+
+    <!-- 3rdparty Loggers -->
+    <logger name="org.springframework.core">
+        <level value="ERROR"/>
+        <appender-ref ref="DB"/>
+    </logger>
+
+    <logger name="org.springframework.beans">
+        <level value="ERROR"/>
+        <appender-ref ref="DB"/>
+    </logger>
+
+    <logger name="org.springframework.context">
+        <level value="ERROR"/>
+        <appender-ref ref="DB"/>
+    </logger>
+
+    <logger name="org.springframework.web">
+        <level value="ERROR"/>
+        <appender-ref ref="DB"/>
+    </logger>
+
+    <!-- Root Logger -->
+    <root>
+        <priority value="ERROR"/>
+        <appender-ref ref="console"/>
+        <appender-ref ref="DB"/>
+    </root>
+</log4j:configuration>

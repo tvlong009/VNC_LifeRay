@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.licenseapplication.service.LicenseApplicationService">
+	<resultMap type="LicenseApplicationVO" id="selectMaxNumber">
+		<result property="idDangkyCPXD" column="iddangkycpxd"/>
+		<result property="maDangKyCPXD" column="madangkycpxd"/>
+	</resultMap>
+	
+	<insert id="insertLicenseApplication" parameterType="LicenseApplicationVO">
+		SET search_path TO 'portal';
+		<selectKey keyProperty="idDangkyCPXD" resultType="int" order="AFTER">
+			 SELECT currval('dangkycpxd_iddangkycpxd_seq');
+		</selectKey>
+		INSERT INTO dangkycpxd	(
+							capxuly,
+							idquanhuyen,
+							idphuongxa,
+							idloaicapphep,
+							iddeclaration,
+							iddeclarationfrom,
+							madangkycpxd,
+							ngaytao,
+							ngaycapnhat
+					)
+					VALUES		(
+							#{capXuLy},
+							#{idQuanHuyen},
+							#{idPhuongXa},
+							#{idLoaiCapPhep},
+							#{declarationId},
+							#{declarationFormId},
+							#{maDangKyCPXD},
+							now(),
+							now()
+					)
+	</insert>
+	
+	<select id="selectMaxNumber" resultMap="selectMaxNumber">
+		SET search_path TO 'portal';
+		SELECT			iddangkycpxd,
+						madangkycpxd
+		FROM			dangkycpxd
+		WHERE			idquanhuyen   = #{idQuanHuyen}
+		AND				idphuongxa	  = #{idPhuongXa}
+		AND				idloaicapphep = #{idLoaiCapPhep}
+	</select>
+</mapper>

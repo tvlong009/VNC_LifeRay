@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.worklife.publicservice.service.WorklifeDeclarationService">
+    <resultMap id="WorklifeDeclaration" type="WorklifeDeclarationVO">
+        <result property="declarationId" column="declaration_id" />
+        <result property="declarationTypeId" column="declaration_type_id" />
+        <result property="receiptCode" column="receipt_code" />
+        <result property="declarationFormId" column="declaration_form_id" />
+        <result property="declarationFormName" column="declaration_form_name" />
+        <result property="declarationTypeName" column="name" />
+        <result property="status" column="status" />
+        <result property="data" column="data" typeHandler="com.worklife.security.util.jsontype.JSonTypeHandler" />
+        <result property="createAt" column="create_at" />
+        <result property="updateAt" column="update_at" />
+    </resultMap>
+    
+    <resultMap id="WorklifeDeclarationAttachments" type="WorklifeDeclarationVO">
+        <result property="data" column="attachments" typeHandler="com.worklife.security.util.jsontype.JSonTypeHandler"/>
+    </resultMap>
+    
+    <insert id="insertDeclaration" parameterType="WorklifeDeclarationVO">
+		<selectKey keyProperty="declarationId" resultType="int" order="AFTER">
+			 SELECT currval('declaration_declaration_id_seq');
+		</selectKey>
+    	INSERT INTO portal.declaration	(	declaration_type_id,
+    								receipt_code,
+    								data,
+    								status,
+    								create_at,
+    								update_at
+    							)
+    	VALUES					(
+    								#{declarationTypeId},
+    								#{receiptCode},
+    								#{json}::json,
+    								0::bit,
+    								NOW(),
+    								NOW()
+    							)
+    </insert>
+    
+    <update id="updateDeclarationStatus" parameterType="WorklifeDeclarationVO">
+    	SET search_path TO 'portal';
+    	UPDATE 	declaration
+    	SET		status 				= #{status}::bit,
+    			update_at			= NOW()
+    	WHERE	declaration_id 		= #{declarationId}
+    </update>
+    
+    <update id="updateDeclaration" parameterType="WorklifeDeclarationVO">
+    	SET search_path TO 'portal';
+    	UPDATE 	declaration
+    	SET		data 				= #{json}::json,
+    			declaration_type_id	= #{declarationTypeId},
+    			update_at			= NOW()
+    	WHERE	declaration_id 		= #{declarationId}
+    </update>
+    
+    <delete id="deleteDeclaration" parameterType="int">
+    	SET search_path TO 'portal';
+    	DELETE 
+    	FROM 	declaration
+    	WHERE	declaration_id 		= #{declarationId}
+    </delete>
+    
+    <delete id="deleteDeclarationByDeclarationFormId" parameterType="int">
+    	SET search_path TO 'portal';
+    	DELETE 
+    	FROM 	declaration
+    	WHERE	(data->>'declarationFormId')::integer 		= #{declarationFormId}
+    </delete>
+    
+    <select id="selectDeclarationAttachment" resultMap="WorklifeDeclarationAttachments">
+    	SET search_path TO 'portal';
+    	SELECT 	* 
+		FROM 	(	
+					SELECT 	json_array_elements(data) AS attachments 
+					FROM	(	
+								SELECT (data->>'worklifePublicServiceAttachments')::json AS data 
+								FROM 	declaration 
+								WHERE 	(data->>'worklifePublicServiceAttachments')::json IS NOT NULL
+							) 	
+					AS 		declaration_attachments) 
+		AS 		declaration_attachments
+		WHERE 	attachments->>'worklifeDeclarationAttachmentId' = #{worklifeDeclarationAttachmentId}
+		AND		(attachments->>'worklifeDeclarationAttachmentFileName')::text != '""';
+    </select>
+
+    <select id="selectListDeclaration" parameterType="WorklifeDeclarationVO" resultMap="WorklifeDeclaration">
+    	SET search_path TO 'portal';
+        SELECT 	declaration.*,
+        		declaration_form.declaration_form_id,
+        		declaration_form.declaration_form_name,
+        		declaration_type.name
+        FROM 	declaration
+        LEFT JOIN declaration_type ON declaration.declaration_type_id = declaration_type.declaration_type_id
+        INNER JOIn declaration_form ON declaration_form.declaration_form_id = (data ->> 'declarationFormId')::integer
+        WHERE	1 = 1
+        <if test="status != null and status != ''">
+        AND		status 							= #{status}::bit
+        </if>
+        <if test="declarationTypeId != null and declarationTypeId != ''">
+        AND		declaration.declaration_type_id = #{declarationTypeId}
+        </if>
+        <if test="declarationId != null and declarationId != ''">
+        AND		declaration.declaration_id 		= #{declarationId}
+        </if>
+        <if test="search != '' and search != null">
+        AND 	declaration_type.name LIKE CONCAT('%', #{search}, '%')
+        </if>
+        <if test="columnName != '' and columnName != null">
+            <if test="typeOrder != '' and typeOrder != null">
+                ORDER BY
+                <if test="columnName == 'receipt_code'">
+                    declaration.receipt_code
+                </if>
+                <if test="columnName == 'declaration_form_name'">
+                    declaration_form.declaration_form_name
+                </if>
+                <if test="columnName == 'name'">
+                    declaration_type.name
+                </if>
+                <if test="columnName == 'create_at'">
+                    declaration.create_at
+                </if>
+                <if test="columnName == 'update_at'">
+                    declaration.update_at
+                </if>
+                <if test="typeOrder == 'desc'">
+                    DESC
+                </if>
+                <if test="typeOrder == 'asc'">
+                    ASC
+                </if>
+            </if>
+        </if>
+        <if test="recordCountPerPage != 0 and recordCountPerPage != null and recordCountPerPage != '' and firstIndex != 0 and firstIndex != null and firstIndex != ''">
+        LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+        </if>
+    </select>
+
+    <select id="selectCountDeclaration" parameterType="WorklifeDeclarationVO" resultType="int">
+    	SET search_path TO 'portal';
+        SELECT 	COUNT(declaration.*)
+        FROM 	declaration
+        LEFT JOIN declaration_type ON declaration.declaration_type_id = declaration_type.declaration_type_id
+        INNER JOIn declaration_form ON declaration_form.declaration_form_id = (data ->> 'declarationFormId')::integer
+        WHERE	1 = 1
+        <if test="status != null and status != ''">
+        AND		status 							= #{status}::bit
+        </if>
+        <if test="declarationTypeId != null and declarationTypeId != ''">
+        AND		declaration.declaration_type_id = #{declarationTypeId}
+        </if>
+        <if test="declarationId != null and declarationId != ''">
+        AND		declaration.declaration_id 		= #{declarationId}
+        </if>
+        <if test="search != '' and search != null">
+        AND 	declaration_type.name LIKE CONCAT('%', #{search}, '%')
+        </if>
+    </select>
+</mapper>

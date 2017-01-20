@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.administrativeprocedures.service.ProcedureFromService">
+	<resultMap type="ProcedureFromVO" id="procedureFromVO">
+		<result property="idThuTucBieuMau" column="idthutuc_bieumau"/>
+		<result property="idThuTucHanhChinh" column="idthutuchanhchinh"/>
+		<result property="tenBieuMau" column="tenbieumau"/>
+		<result property="tenFile" column="tenfile"/>
+		<result property="duongDan" column="duongdan"/>
+	</resultMap>
+	
+	<select id="loadProcedureFromByAdministrative" resultMap="procedureFromVO">
+		SET search_path TO 'portal';
+		SELECT * FROM thutuc_bieumau
+		WHERE		idthutuchanhchinh = #{idThuTucHanhChinh}
+		ORDER BY 	tenbieumau
+	</select>
+	<insert id="insertProcedureFrom" parameterType="ProcedureFromVO">
+		SET search_path TO 'portal';
+		<selectKey keyProperty="idThuTucBieuMau" resultType="int" order="AFTER">
+			 SELECT currval('thutuc_bieumau_idthutuc_bieumau_seq');
+		</selectKey>
+		INSERT INTO thutuc_bieumau 	(
+							idthutuchanhchinh,
+							tenbieumau,
+							tenfile,
+							duongdan
+					)
+					VALUES			(
+							#{idThuTucHanhChinh},
+							#{tenBieuMau},
+							#{tenFile},
+							#{duongDan}
+					)
+	</insert>
+	<delete id="deleteProcedureFrom" parameterType="ProcedureFromVO">
+		SET search_path TO 'portal';
+		DELETE	FROM	thutuc_bieumau
+		WHERE			idthutuc_bieumau = #{idThuTucBieuMau}
+	</delete>
+	<update id="updateProcedureFrom" parameterType="ProcedureFromVO">
+		SET search_path TO 'portal';
+		UPDATE 	thutuc_bieumau
+		SET		tenbieumau = #{tenBieuMau},
+				tenfile = #{tenFile},
+				duongdan = #{duongDan}
+		WHERE	idthutuc_bieumau = #{idThuTucBieuMau}
+	</update>
+</mapper>

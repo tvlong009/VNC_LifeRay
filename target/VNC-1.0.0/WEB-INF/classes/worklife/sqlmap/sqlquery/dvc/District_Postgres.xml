@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.afterlogin.service.DistrictService">
+	<resultMap type="int" id="getIDTinh">
+		<result property="maTinh" column="matinh"/>
+	</resultMap>
+	<resultMap type="DistrictVO" id="DistrictVO">
+		<result property="idHuyen" column="iddmhuyen"/>
+		<result property="ten" column="ten"/>
+		<result property="maHuyen" column="mahuyen"/>
+		<result property="loai" column="loai"/>
+		<result property="maTinh" column="matinh"/>
+	</resultMap>
+	
+	<select id="selectAllDistrict" resultType="DistrictVO" resultMap="DistrictVO">
+		SET search_path TO 'public';
+		SELECT * FROM dmhuyen
+		ORDER BY ten
+	</select>
+	
+	<select id="selectIdTinhByDeDistrict" resultMap="getIDTinh">
+		SET search_path TO 'public';
+		SELECT			matinh
+		FROM			dmhuyen
+		WHERE			iddmhuyen = #{idHuyen}
+	</select>
+	<select id="selectDistrictByID" resultMap="DistrictVO">
+		SET search_path TO 'public';
+		SELECT			iddmhuyen,
+						ten,
+						mahuyen,
+						loai,
+						matinh
+		FROM			dmhuyen
+		WHERE			iddmhuyen = #{idHuyen}
+	</select>
+	<select id="selectDisstrictByCode" resultMap="DistrictVO">
+		SET search_path TO 'public';
+		SELECT			iddmhuyen,
+						ten,
+						mahuyen,
+						loai,
+						matinh
+		FROM			dmhuyen
+		WHERE			mahuyen = #{maHuyen}
+	</select>
+</mapper>

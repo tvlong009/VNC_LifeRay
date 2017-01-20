@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.afterlogin.service.FileService">
+	<resultMap type="FileVO" id="searchExsitFile">
+		<result property="idHoSo" column="idhoso"/>
+		<result property="idQuan" column="idquan"/>
+		<result property="soBienNhan" column="sobiennhan"/>
+		<result property="fileListVO.trangThai" column="trangthai"/>
+	</resultMap>
+	
+	<select id="searchStatusFile" resultMap="searchExsitFile">
+		SET search_path TO 'public';
+		SELECT		hs.idhoso,
+					hs.idquan,
+					hs.sobiennhan,
+					ds.trangthai
+		FROM		hoso			AS hs
+		INNER JOIN	danhsach_hoso 	AS ds
+		ON			ds.idhoso = hs.idhoso
+		WHERE		idquan 				= #{idQuan}
+		AND			lower(sobiennhan)	= lower(#{soBienNhan})
+		LIMIT		1
+	</select>
+</mapper>

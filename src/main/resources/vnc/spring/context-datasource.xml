@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+<!--     <bean id="vnc.properties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> -->
+<!--         <property name="locations"> -->
+<!--             <list> -->
+<!--                 <value>classpath:/vnc/properties/globals.properties</value> -->
+<!--                  <value>classpath:F:/FPT-Nhat/VNC/bundles0707/portal-setup-wizard.properties</value> -->
+<!--             </list> -->
+<!--         </property> -->
+<!--     </bean> -->
+
+    <!-- DataSource -->
+    <alias name="dataSource-postgres" alias="vncDatabase"/>
+
+	<bean id="dataSource" class="com.liferay.portal.kernel.util.InfrastructureUtil" factory-method="getDataSource" />
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="config/mybatis-config.xml" />
+	</bean>
+</beans>

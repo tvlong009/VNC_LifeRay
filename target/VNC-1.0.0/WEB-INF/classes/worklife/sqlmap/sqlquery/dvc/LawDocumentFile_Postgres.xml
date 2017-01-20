@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.lawdocument.service.LawDocumentFileService">
+<resultMap type="LawDocumentFileVO" id="LawDocumentFileVO">
+		<result property="idFileDinhKem" column="idfiledinhkem"/>
+		<result property="idVanBan" column="idvanban"/>
+		<result property="tenFile" column="tenfile"/>
+		<result property="duongDan" column="duongdan"/>
+				
+	</resultMap>	
+
+<insert id="insertLawDocumentFile" parameterType="LawDocumentFileVO">
+		SET search_path TO 'portal';
+		<selectKey keyProperty="idFileDinhKem" resultType="int" order="AFTER">
+			 SELECT currval('file_vanban_idfiledinhkem_seq');
+		</selectKey>
+		INSERT INTO file_vanban 	(										
+						idvanban,
+						tenfile,
+						duongdan
+					)
+					VALUES			(
+						#{idVanBan},
+						#{tenFile},
+						#{duongDan}
+					)
+	</insert>
+	<select id="selectFileByIDLawDoc" parameterType="int" resultMap="LawDocumentFileVO">
+	SET search_path TO 'portal';
+	SELECT	idfiledinhkem,
+			idvanban,
+			tenfile,
+			duongdan	
+		FROM			file_vanban
+		WHERE			idvanban = #{idvanban}
+	
+	
+	</select>
+		<select id="selectPathIDFile" parameterType="int" resultType="String">
+	SET search_path TO 'portal';
+	SELECT	duongdan	
+		FROM			file_vanban
+		WHERE			idfiledinhkem = #{idfiledinhkem}
+	
+	
+	</select>
+	<update id="updateLawDocumentFile" parameterType="LawDocumentFileVO">
+		SET search_path TO 'portal';
+		UPDATE	file_vanban
+		SET		tenfile					= #{tenFile},
+				duongdan				= #{duongDan}
+		WHERE	idvanban				= #{idVanBan}
+		AND		idfiledinhkem			=#{idFileDinhKem}
+
+	</update>
+	
+	<delete id="deleteLawDocument" parameterType="LawDocumentFileVO">
+		SET search_path TO 'portal';
+		DELETE FROM file_vanban
+		WHERE	idfiledinhkem			=#{idFileDinhKem}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.registrationstarted.service.RegistrationstartedService">
+	<resultMap type="RegistrationstartedVO" id="registrationstartedVO">
+		<result property="idDangKyKhoiCong" column="iddangkykhoicong"/>
+		<result property="idGpxd" column="idgpxd"/>
+		<result property="capThamQuyen" column="cap"/>
+		<result property="declarationId" column="iddeclaration"/>
+		<result property="declarationFormId" column="iddeclarationfrom"/>
+		<result property="ngayTao" column="ngaydangky"/>
+		<result property="maDangKy" column="madangky"/>
+		<result property="ngayCapNhat" column="ngapcapnhat"/>
+	</resultMap>
+	
+	<select id="searchRegistrationstarted" resultMap="registrationstartedVO">
+		SET search_path TO 'portal';
+		SELECT * FROM dangkykhoicong
+		WHERE		idgpxd = #{idGpxd}
+	</select>
+	<insert id="insertRegistrationstarted" parameterType="RegistrationstartedVO">
+		SET search_path TO 'portal';
+		<selectKey keyProperty="idDangKyKhoiCong" resultType="int" order="AFTER">
+			 SELECT currval('dangkykhoicong_iddangkykhoicong_seq');
+		</selectKey>
+		INSERT INTO dangkykhoicong 	(
+						idgpxd,
+						cap,
+						iddeclaration,
+						iddeclarationfrom,
+						madangky,
+						ngaydangky,
+						ngapcapnhat
+					)
+					VALUES			(
+						#{idGpxd},
+						#{capThamQuyen},
+						#{declarationId},
+						#{declarationFormId},
+						#{maDangKy},
+						now(),
+						now()
+					)
+	</insert>
+</mapper>

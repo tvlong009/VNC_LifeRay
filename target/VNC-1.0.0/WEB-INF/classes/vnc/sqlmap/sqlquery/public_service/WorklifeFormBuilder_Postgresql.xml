@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.worklife.manager.publicservice.service.WorklifeFormBuilderService">
+    <resultMap id="WorklifeFormBuilder" type="WorklifeFormBuilderVO">
+        <result property="declarationFormId" column="declaration_form_id" />
+        <result property="declarationFormName" column="declaration_form_name" />
+        <result property="declarationTypeId" column="declaration_type_id" />
+        <result property="designForm" column="design_form" />
+        <result property="publishedForm" column="published_form" />
+        <result property="createAt" column="create_at" />
+        <result property="updateAt" column="update_at" />
+        <association property="worklifeDeclarationType" javaType="WorklifeDeclarationTypeVO" select="com.worklife.publicservice.service.WorklifeDeclarationTypeService.selectDeclarationType" column="{declarationTypeId=declaration_type_id}"></association>
+    </resultMap>
+    
+    <resultMap id="WorklifeFormBuilder_PublishedForm" type="WorklifeFormBuilderVO">
+        <result property="declarationFormId" column="declaration_form_id" />
+        <result property="declarationFormName" column="declaration_form_name" />
+        <result property="declarationTypeId" column="declaration_type_id" />
+        <result property="publishedFormMap" column="published_form" typeHandler="com.worklife.security.util.jsontype.JSonTypeHandler"/>
+    </resultMap>
+    
+    <insert id="insertDeclarationForm" parameterType="WorklifeFormBuilderVO">
+    	SET search_path TO 'portal';
+		<selectKey keyProperty="declarationFormId" resultType="int" order="AFTER">
+			 SELECT currval('declaration_form_declaration_form_id_seq');
+		</selectKey>
+    	INSERT INTO declaration_form	(	declaration_form_name,
+    										declaration_type_id,
+		    								design_form,
+		    								published_form,
+		    								create_at,
+		    								update_at
+    									)
+    	VALUES							(	#{declarationFormName},
+		    								#{declarationTypeId},
+		    								#{designForm}::json,
+		    								#{publishedForm}::json,
+		    								NOW(),
+		    								NOW()
+    									)
+    </insert>
+    
+    <update id="updateDeclarationForm" parameterType="WorklifeFormBuilderVO">
+    	SET search_path TO 'portal';
+    	UPDATE 	declaration_form
+    	SET		declaration_form_name 	= #{declarationFormName},
+    			design_form 			= #{designForm}::json,
+    			published_form 			= #{publishedForm}::json,
+    			declaration_type_id		= #{declarationTypeId},
+    			update_at				= NOW()
+    	WHERE	declaration_form_id 	= #{declarationFormId}
+    </update>
+    
+    <delete id="deleteDeclarationForm" parameterType="int">
+    	SET search_path TO 'portal';
+    	DELETE 
+    	FROM 	declaration_form
+    	WHERE	declaration_form_id = #{declarationFormId}
+    </delete>
+    
+    <select id="selecDeclarationPublishedForm" resultMap="WorklifeFormBuilder_PublishedForm">
+    	SET search_path TO 'portal';
+        SELECT 	declaration_form.*
+        FROM	portal.declaration_form
+        WHERE	declaration_form_id = #{declarationFormId}
+    </select>
+
+    <select id="selectListDeclarationForm" parameterType="WorklifeFormBuilderVO" resultMap="WorklifeFormBuilder">
+    	SET search_path TO 'portal';
+        SELECT 	declaration_form.*
+        FROM 	declaration_form
+        LEFT JOIN declaration_type ON declaration_form.declaration_type_id = declaration_type.declaration_type_id
+        WHERE	1 = 1
+        <if test="declarationTypeId != null and declarationTypeId != ''">
+        AND		declaration_type_id = #{declarationTypeId}
+        </if>
+        <if test="declarationFormId != null and declarationFormId != ''">
+        AND		declaration_form_id = #{declarationFormId}
+        </if>
+        <if test="search != '' and search != null">
+        AND 	( 	declaration_type.name LIKE CONCAT('%', #{search}, '%')
+        			OR declaration_form_name LIKE CONCAT('%', #{search}, '%'))
+        </if>
+        <if test="columnName != '' and columnName != null">
+            <if test="typeOrder != '' and typeOrder != null">
+                ORDER BY
+                <if test="columnName == 'name'">
+                    declaration_type.name
+                </if>
+                <if test="columnName == 'declaration_form_name'">
+                    declaration_form.declaration_form_name
+                </if>
+                <if test="columnName == 'create_at'">
+                    declaration_form.create_at
+                </if>
+                <if test="columnName == 'update_at'">
+                    declaration_form.update_at 
+                </if>
+                <if test="typeOrder == 'desc'">
+                    DESC
+                </if>
+                <if test="typeOrder == 'asc'">
+                    ASC
+                </if>
+            </if>
+        </if>
+        <if test="recordCountPerPage != 0 and recordCountPerPage != null and recordCountPerPage != '' and firstIndex != 0 and firstIndex != null and firstIndex != ''">
+        LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+        </if>
+    </select>
+
+    <select id="selectCountDeclarationForm" parameterType="WorklifeFormBuilderVO" resultType="int">
+    	SET search_path TO 'portal';
+        SELECT 	COUNT(*)
+        FROM 	declaration_form
+        LEFT JOIN declaration_type ON declaration_form.declaration_type_id = declaration_type.declaration_type_id
+        WHERE	1 = 1
+        <if test="declarationTypeId != null and declarationTypeId != ''">
+        AND		declaration_type_id = #{declarationTypeId}
+        </if>
+        <if test="declarationFormId != null and declarationFormId != ''">
+        AND		declaration_form_id = #{declarationFormId}
+        </if>
+        <if test="search != '' and search != null">
+        AND 	( 	declaration_type.name LIKE CONCAT('%', #{search}, '%')
+        			OR declaration_form_name LIKE CONCAT('%', #{search}, '%'))
+        </if>
+    </select>
+</mapper>

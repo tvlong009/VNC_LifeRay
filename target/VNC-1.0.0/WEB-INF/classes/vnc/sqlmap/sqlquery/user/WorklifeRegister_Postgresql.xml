@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.worklife.user.register.service.RegisterService">
+	<resultMap id="ProvinceVO" type="ProvinceVO">
+		<result property="idProvince" column="iddmtinh" />
+		<result property="nameProvince" column="ten" />
+	</resultMap>
+	<resultMap id="UsersVO" type="UsersVO">
+		<result property="idUser" column="id_user" />
+		<result property="groupId" column="group_id" />
+		<result property="userName" column="username" />
+		<result property="passWord" column="password" />
+		<result property="email" column="email" />
+		<result property="realName" column="fullname" />
+		<result property="gender" column="gender" />
+		<result property="address" column="address" />
+		<result property="birthday" column="birthday" />
+		<result property="cellPhone" column="cellphone" />
+		<result property="landLine" column="landline" />
+		<result property="identityCard" column="identity_card" />
+		<result property="idnum_date" column="idnum_date" />
+		<result property="idnumAency" column="idnum_agency" />
+		<result property="avatar" column="avatar" />
+		<result property="updateAt" column="update_at" />
+		<result property="createAt" column="create_at" />
+		<result property="active_flag" column="active_flag" />
+	</resultMap>
+	
+	<select id="SelectAllProvince" resultMap="ProvinceVO">
+		SET search_path TO 'public';
+		SELECT * FROM dmtinh
+		ORDER BY ten ASC
+	</select>
+	
+	<insert id="InsertUsersPersonal" parameterType="UsersVO">
+		SET search_path TO 'public';
+		INSERT INTO users ( 
+							 group_id, 
+							 username,
+							 password,
+							 email,
+							 fullname,
+							 gender, 
+							 address,
+							 cellphone, 
+							 identity_card,
+							 idnum_date,
+							 idnum_agency,
+							 create_at,
+							 active_flag
+							 ) 
+				   VALUES (	 #{groupId},
+				   			 #{userName},
+				   			 #{passWord},
+				   			 #{email}, 
+				   			 #{realName}, 
+				   			 #{gender}, 
+				   			 #{address}, 
+				   			 #{cellPhone},
+				   			 #{identityCard},
+				   			 #{idnum_date},
+				   			 #{idnumAency},
+				   			 #{createAt},
+				   			 #{active_flag}::bit
+				   			  )
+	</insert>
+	
+	<select id="SelectUserByEmail" resultMap="UsersVO" parameterType="UsersVO">
+		SET search_path TO 'public';
+		SELECT 	id_user,
+				group_id,
+				username,
+				password,
+				email,
+				fullname,
+				gender,
+				address,
+				birthday,
+				cellphone,
+				landline,
+				identity_card,
+				idnum_date,
+				idnum_agency,
+				avatar,
+				update_at,
+				create_at,
+				active_flag::integer
+		FROM users
+		WHERE email = '${email}'
+	</select>
+	
+	<select id="SelectUsersByCard" resultMap="UsersVO" parameterType="UsersVO">
+		SET search_path TO 'public';
+		SELECT * FROM users WHERE identity_card = '${identityCard}'
+	</select>
+	
+	<update id="UpdatePassUsersByEmail" parameterType="UsersVO">
+		SET search_path TO 'public';
+		UPDATE  users
+		SET
+				password = #{passWord}
+				
+		WHERE
+				email = #{email}
+	</update>
+	
+	<insert id="InsertUserByTaiKhoan" parameterType="UsersVO">
+		SET search_path TO 'portal';
+		INSERT INTO taikhoan ( 
+							 hoten,
+							 email,
+							 gioitinh, 
+							 diachi,
+							 dienthoaididong, 
+							 id,
+							 ngaycap,
+							 noicap,
+							 loainguoidung,
+							 ngaytao,
+							 active_flag
+							 ) 
+				   VALUES (	 #{userName},
+				   			 #{email},
+				   			 #{gender},
+				   			 #{address}, 
+				   			 #{cellPhone}, 
+				   			 #{identityCard}, 
+				   			 #{idnum_date}, 
+				   			 #{idnumAency},
+				   			 #{type}::bit,
+				   			 #{createAt},
+				   			 #{active_flag}::bit
+				   			  )
+	</insert>
+	
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="trangthai_sql">
+
+    <resultMap type="com.fpt.vnc.ds_trangthai.dto.TrangThaiDTO" id="TrangThaiDTO">
+        <id property="idTrangThai" column="idtrangthai" />
+        <result property="tenTrangThai" column="tentrangthai"/>   
+        <result property="maTrangThai" column="matrangthai"/>  
+        <result property="ngayTao" column="ngaytao"/>  
+         <result property="ngayCapNhat" column="ngaycapnhat"/>  
+    </resultMap>
+     
+    <select id="selectAll" resultMap="TrangThaiDTO">
+        SELECT * FROM fpt_dmtrangthai
+    </select>
+    
+    <select id="countPersonWithStore" resultType="Integer" statementType="CALLABLE">
+        {call totalrecords()}
+    </select>
+    
+</mapper>

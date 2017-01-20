@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- <bean id="vnc.properties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/vnc/properties/globals.properties</value>
+            </list>
+        </property>
+    </bean> -->
+    <bean id="vnc.lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" lazy-init="true"/>
+    <!-- SqlMap setup for iBATIS Database Layer -->
+    <!-- define the SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="vncDatabase"/>
+        <property name="mapperLocations" value="classpath*:vnc/sqlmap/sqlquery/**/*.xml"/>
+        <property name="typeAliasesPackage" value="com.fpt.vnc"/>
+    </bean>
+
+    <!-- scan for mappers and let them be autowired -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.fpt.vnc.**.service"/>
+    </bean>
+</beans>	

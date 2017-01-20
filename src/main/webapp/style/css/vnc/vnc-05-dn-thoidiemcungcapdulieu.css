@@ -1,0 +1,26 @@
+#vnc05-tracuu-form label{
+	padding-top: 7px;
+}
+.bdr-thead {
+	border-top: 1px solid #e3e3e3;
+	border-right: 1px solid #e3e3e3;
+	border-left: 1px solid #e3e3e3;
+	border-bottom: 1px solid #e3e3e3;
+}
+
+.bdr-green {border-left: 3px solid #79c455;}
+.bdr-blue{border-left:3px solid #5191d1;}
+.bdr-orange{border-left:3px solid #da5716;}
+
+.bg-title{background: linear-gradient(to bottom, #fbfbfc 0%,#f6f6f7 100%);}
+
+.content{padding: 15px 20px 0px 20px;}
+
+.mid-text{vertical-align: middle !important;}
+
+#vnc05-table button{
+	border: none;
+	background-color: transparent;
+}
+
+.label-left{text-align: left !important;}

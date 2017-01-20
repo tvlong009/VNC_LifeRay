@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="worklife.properties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/worklife/properties/globals.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- DataSource -->
+    <alias name="dataSource-${Globals.DbType}" alias="worklifeDatabase"/>
+
+    <!-- Declare a datasource that has pooling capabilities -->
+    <bean id="dataSource-postgres" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close"
+          p:driverClass="${Globals.PostgresDriverClassName}"
+          p:jdbcUrl="${Globals.PostgresUrl}"
+          p:user="${Globals.PostgresUserName}"
+          p:password="${Globals.PostgresPassword}"
+          p:acquireIncrement="10"
+          p:idleConnectionTestPeriod="60"
+          p:maxPoolSize="100"
+          p:maxStatements="50"
+          p:minPoolSize="10"/>
+</beans>

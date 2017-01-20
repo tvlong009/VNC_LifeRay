@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.afterlogin.service.CommuneService">
+	<resultMap type="CommunesVO" id="communeVo">
+		<result property="idDMXa" column="iddmxa"/>
+		<result property="ten" column="ten"/>
+		<result property="loai" column="loai"/>
+	</resultMap>
+	<select id="selectListCommunesByDistric" resultMap="communeVo">
+		SET search_path TO 'public';
+		SELECT			ten,
+						iddmxa
+		FROM			dmxa
+		WHERE			mahuyen = #{maHuyen}
+		ORDER BY		ten
+	</select>
+	<select id="selectCommues" resultMap="communeVo">
+		SET search_path TO 'public';
+		SELECT			iddmxa,
+						loai,
+						ten
+		FROM			dmxa
+		WHERE			iddmxa = #{idDMXa}
+	</select>
+</mapper>

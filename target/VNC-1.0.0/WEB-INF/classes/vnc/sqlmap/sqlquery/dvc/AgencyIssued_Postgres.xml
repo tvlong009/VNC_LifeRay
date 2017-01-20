@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.lawdocument.service.AgencyIssuedService">
+	<resultMap type="AgencyIssuedVO" id="AgencyIssuedVO">
+		<result property="idCoQuanBanHanh" column="idcoquanbanhanh"/>
+		<result property="tenCoQuanBanHanh" column="tencoquanbanhanh"/>
+	</resultMap>
+			
+	<select id="selectAgencyIssued" resultMap="AgencyIssuedVO">
+		SET search_path TO 'portal';
+		SELECT			idcoquanbanhanh,
+						tencoquanbanhanh
+		FROM			dmcoquanbanhanh	
+		ORDER BY		tencoquanbanhanh
+	</select>
+</mapper>

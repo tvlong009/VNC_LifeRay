@@ -1,0 +1,15 @@
+.treegrid-expander {
+	
+	height: 20px;
+	width:20px;
+}
+#vnc11-treetable input{
+	border: none;
+	background-color: transparent;
+}
+#vnc11-treetable{
+	vertical-align: middle;
+}
+.ibox-title h3{
+	float: left;
+}

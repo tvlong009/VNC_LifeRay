@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.administrativeprocedures.service.ContainInfoService">
+	<resultMap type="ContainInfoVO" id="containInfoVO">
+		<result property="idContain" column="idnoidung"/>
+		<result property="idProcedureAdministrative" column="idthutuchc"/>
+		<result property="contain" column="contain"/>
+		<result property="request" column="request"/>
+	</resultMap>
+	
+	<select id="selectListContainInfo" resultMap="containInfoVO">
+		SET search_path TO 'portal';
+		SELECT * FROM thutuc_noidung
+		WHERE		idthutuchc = #{idProcedureAdministrative}
+		ORDER BY	idnoidung
+	</select>
+	<insert id="insertContainInfo" parameterType="ContainInfoVO">
+		SET search_path TO 'portal';
+		<selectKey keyProperty="idContain" resultType="int" order="AFTER">
+			 SELECT currval('thutuc_noidung_idnoidung_seq');
+		</selectKey>
+		INSERT INTO thutuc_noidung	(
+							idthutuchc,
+							contain,
+							request
+					)
+					VALUES			(
+							#{idProcedureAdministrative},
+							#{contain},
+							#{request}
+					)
+	</insert>
+	<update id="updateContainInfo" parameterType="ContainInfoVO">
+		SET search_path TO 'portal';
+		UPDATE	thutuc_noidung
+		SET		contain						= #{contain},
+				request						= #{request}
+		WHERE	idnoidung					= #{idContain}
+	</update>
+	<delete id="deleteContainInfo" parameterType="ContainInfoVO">
+		SET search_path TO 'portal';
+		DELETE	FROM	thutuc_noidung
+		WHERE	idnoidung	= #{idContain}
+	</delete>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.licenseapplication.service.LicenseApplicationFileService">
+	<insert id="insertLicenseApplicationFile" parameterType="LicenseApplicationFileVO">
+		SET search_path TO 'portal';
+		<selectKey keyProperty="idDangKyCPXDFile" resultType="int" order="AFTER">
+			 SELECT currval('dangkycpxd_file_iddangkycpxdfile_seq');
+		</selectKey>
+		INSERT INTO dangkycpxd_file	(
+							idangkycpxd,
+							tenfile,
+							duongdan,
+							ngaytao,
+							ngaycapnhat
+					)
+					VALUES		(
+							#{idDangKyCPXD},
+							#{tenFile},
+							#{duongDan},
+							now(),
+							now()
+					)
+	</insert>
+</mapper>

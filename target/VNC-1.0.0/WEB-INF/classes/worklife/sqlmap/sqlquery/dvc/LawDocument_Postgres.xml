@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.lawdocument.service.LawDocumentService">	
+	<resultMap type="LawDocumentVO" id="LawDocumentVO">
+		<result property="idVanBan" column="idvanban"/>
+		<result property="linhVuc" column="linhvuc"/>
+		<result property="idLoaiVanBan" column="idloaivanban"/>
+		<result property="tenLoai" column="tenloai"/>
+		<result property="idCapBanHanh" column="idcapbanhanh"/>
+		<result property="tenCapBanHanh" column="tencapbanhanh"/>
+		<result property="idCoQuanBanHanh" column="idcoquanbanhanh"/>
+		<result property="tenCoQuanBanHanh" column="tencoquanbanhanh"/>
+		<result property="soVanBan" column="sovanban"/>
+		<result property="ngayVanBan" column="ngayvanban"/>
+		<result property="ngayHieuLuc" column="ngayhieuluc"/>
+		<result property="trichYeu" column="trichyeu"/>				
+	</resultMap>	
+	<resultMap type="LawDocumentVO" id="listLawDocumentVO">
+		<result property="idVanBan" column="idvanban"/>
+		<result property="idLoaiVanBan" column="idloaivanban"/>
+		<result property="tenLoai" column="tenloai"/>
+		<result property="idCapBanHanh" column="idcapbanhanh"/>
+		<result property="tenCapBanHanh" column="tencapbanhanh"/>
+		<result property="idCoQuanBanHanh" column="idcoquanbanhanh"/>
+		<result property="tenCoQuanBanHanh" column="tencoquanbanhanh"/>
+		<result property="soVanBan" column="sovanban"/>
+		<result property="ngayVanBan" column="ngayvanban"/>
+		<result property="ngayHieuLuc" column="ngayhieuluc"/>
+		<result property="trichYeu" column="trichyeu"/>
+		<collection property="listLawDocumentFile" ofType="LawDocumentFileVO">
+			<result property="idFileDinhKem" column="idfiledinhkem"/>
+			<result property="tenFile" column="tenfile"/>
+			<result property="duongDan" column="duongdan"/>	
+		</collection>
+	</resultMap>
+	
+	<insert id="insertLawDocument" parameterType="LawDocumentVO">
+		SET search_path TO 'portal';
+		<selectKey keyProperty="idVanBan" resultType="int" order="AFTER">
+			 SELECT currval('vanbanphaply_idvanban_seq');
+		</selectKey>
+		INSERT INTO vanbanphaply 	(					
+						linhvuc,
+						idloaivanban,
+						tenloai,
+						idcapbanhanh,
+						tencapbanhanh,
+						idcoquanbanhanh,
+						tencoquanbanhanh,
+						sovanban,
+						ngayvanban,
+						ngayhieuluc,
+						trichyeu,
+						hethieuluc
+					)
+					VALUES			(
+						
+						#{linhVuc},
+						#{idLoaiVanBan},
+						#{tenLoai},
+						#{idCapBanHanh},
+						#{tenCapBanHanh},
+						#{idCoQuanBanHanh},
+						#{tenCoQuanBanHanh},
+						#{soVanBan},
+						#{ngayVanBan},
+						#{ngayHieuLuc},
+						#{trichYeu},
+						#{hetHieuLuc}
+					)
+	</insert>
+	<update id="updateLawDocument" parameterType="LawDocumentVO">
+		SET search_path TO 'portal';
+		UPDATE	vanbanphaply
+		SET		linhvuc=#{linhVuc},
+						idloaivanban=#{idLoaiVanBan},
+						tenloai=#{tenLoai},
+						idcapbanhanh=#{idCapBanHanh},
+						tencapbanhanh=#{tenCapBanHanh},
+						idcoquanbanhanh=#{idCoQuanBanHanh},
+						tencoquanbanhanh=#{tenCoQuanBanHanh},
+						sovanban=#{soVanBan},
+						ngayvanban=#{ngayVanBan},
+						ngayhieuluc=#{ngayHieuLuc},
+						trichyeu=#{trichYeu},
+						hethieuluc=#{hetHieuLuc}
+		WHERE	idvanban = #{idVanBan}
+	</update>
+	
+	<select id="findLawDocument" parameterType="map" resultMap="LawDocumentVO">
+	SET search_path TO 'portal';
+		SELECT			idvanban,
+						linhvuc,
+						idloaivanban,
+						tenloai,
+						idcapbanhanh,
+						tencapbanhanh,
+						idcoquanbanhanh,
+						tencoquanbanhanh,
+						sovanban,
+						ngayvanban,
+						ngayhieuluc,
+						trichyeu,
+						hethieuluc
+		FROM			vanbanphaply
+		WHERE			sovanban = #{soVanBan}
+		AND				ngayvanban=#{ngayVanBan}
+		AND				idcoquanbanhanh=#{idCoQuanBanHanh}
+	
+	</select>
+			
+	<select id="searchLawDocument" resultMap="listLawDocumentVO" parameterType="LawDocumentVO">
+		SET search_path TO 'portal';
+		SELECT			vb.idloaivanban,
+						vb.tenloai,
+						vb.idcapbanhanh,
+						vb.tencapbanhanh,
+						vb.idcoquanbanhanh,
+						vb.tencoquanbanhanh,
+						vb.sovanban,
+						vb.ngayvanban,
+						vb.ngayhieuluc,
+						vb.trichyeu,
+						fi.idfiledinhkem,
+						fi.tenfile,
+						fi.duongdan
+		FROM			vanbanphaply	AS vb
+		LEFT	JOIN	file_vanban		AS fi
+		ON				fi.idvanban = vb.idvanban
+		WHERE			vb.hethieuluc != true
+		<if test="idLoaiVanBan > 0">
+            AND vb.idloaivanban = #{idLoaiVanBan}
+        </if>
+        <if test="idCapBanHanh > 0">
+            AND vb.idcapbanhanh = #{idCapBanHanh}
+        </if>
+        <if test="soVanBan != '' and soVanBan != null">
+            AND lower(vb.sovanban) LIKE lower(CONCAT('%', #{soVanBan}, '%'))
+        </if>
+        <if test="ngayVanBan != '' and ngayVanBan != null">
+            AND vb.ngayvanban = #{ngayVanBan}
+        </if>
+        <if test="idCoQuanBanHanh > 0">
+            AND vb.idcoquanbanhanh = #{idCoQuanBanHanh}
+        </if>
+        <if test="trichYeu != '' and trichYeu != null">
+            AND lower(vb.trichyeu) LIKE lower(CONCAT('%', #{trichYeu}, '%'))
+        </if>
+        ORDER BY		vb.sovanban
+	</select>
+</mapper>

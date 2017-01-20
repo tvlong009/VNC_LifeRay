@@ -1,0 +1,10 @@
+#contextMenu {
+  position: absolute;
+  display:none;
+}
+#vnc02-thongtinchitieu .control-label{
+	text-align: left;
+}
+.modal-footer{
+ box-shadow: none;
+}

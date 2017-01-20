@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.worklife.manager.generalinformation.service.WorklifeDistrictService">
+    <resultMap id="WorklifeDistrict" type="WorklifeDistrictVO">
+        <result property="districtId" column="district_id"/>
+        <result property="districtName" column="district_name"/>
+        <result property="cityId" column="city_id"/>
+        <result property="districtParentId" column="district_parent_id"/>
+        <collection property="listDistrictChild" javaType="ArrayList" select="com.worklife.manager.generalinformation.service.WorklifeDistrictService.selectDistrictByDistrictParentId" column="{districtParentId=district_id}"></collection>
+    </resultMap>
+
+    <select id="selectAllDistrict" resultMap="WorklifeDistrict">
+    	SET search_path TO 'public';
+        SELECT 	"district".*
+        FROM 	"district"
+    </select>
+
+    <select id="selectDistrictByCityId" resultMap="WorklifeDistrict">
+    	SET search_path TO 'public';
+        SELECT 	"district".*
+        FROM 	"district"
+        WHERE	"district".city_id	=	#{cityId}
+        AND		"district".district_parent_id IS NULL
+    </select>
+    
+    <select id="selectDistrictByDistrictParentId" resultMap="WorklifeDistrict">
+    	SET search_path TO 'public';
+        SELECT 	"district".*
+        FROM 	"district"
+        WHERE	"district".district_parent_id	=	#{districtParentId}
+    </select>
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worklife.user.allowingutilities.service.AllowIngutilitiesService">
+	<resultMap type="AllowIngutilitiesVO" id="checkAllowIngutilities">
+		<result property="idDangKyDVCSauPhep" column="iddangkydvcsauphep"/>
+		<result property="idGPXD" column="idgpxd"/>
+		<result property="maDangKy" column="madangky"/>
+	</resultMap>
+	
+	<select id="checkAllowIngutilitiesExist" resultMap="checkAllowIngutilities">
+		SET search_path TO 'portal';
+		SELECT				iddangkydvcsauphep,
+							idgpxd
+		FROM				dangkydvcsauphep
+		WHERE				idgpxd = #{idGPXD}
+	</select>
+	<insert id="insertAllowIngutilities" parameterType="AllowIngutilitiesVO">
+		SET search_path TO 'portal';
+		<selectKey keyProperty="idDangKyDVCSauPhep" resultType="int" order="AFTER">
+			 SELECT currval('dangkydvcsauphep_iddangkydvcsauphep_seq');
+		</selectKey>
+		INSERT INTO dangkydvcsauphep	(
+						idgpxd,
+						cap,
+						iddeclaration,
+						iddeclarationfrom,
+						madangky,
+						ngaydangky,
+						ngapcapnhat
+					)
+					VALUES				(
+						#{idGPXD},
+						#{capXuLy},
+						#{declarationId},
+						#{declarationFormId},
+						#{maDangKy},
+						now(),
+						now()
+					)
+	</insert>
+	<select id="selectMaxNumber" resultMap="checkAllowIngutilities">
+		SET search_path TO 'portal';
+		SELECT			iddangkydvcsauphep,
+						madangky
+		FROM			dangkydvcsauphep
+	</select>
+</mapper>

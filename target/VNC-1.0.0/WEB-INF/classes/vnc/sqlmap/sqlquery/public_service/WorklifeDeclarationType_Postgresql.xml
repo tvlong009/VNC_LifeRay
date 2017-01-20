@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.worklife.publicservice.service.WorklifeDeclarationTypeService">
+    <resultMap id="WorklifeDeclarationType" type="WorklifeDeclarationTypeVO">
+        <result property="declarationTypeId" column="declaration_type_id" />
+        <result property="name" column="name" />
+        <result property="code" column="code" />
+        <result property="number" column="number" />
+        <result property="data" column="attachments" typeHandler="com.worklife.security.util.jsontype.JSonTypeHandler" />
+        <result property="createAt" column="create_at" />
+        <result property="updateAt" column="update_at" />
+    </resultMap>
+    
+    <insert id="insertDeclarationType" parameterType="WorklifeDeclarationTypeVO">
+    	SET search_path TO 'portal';
+    	INSERT INTO declaration_type	(	declaration_type_id, 
+    										name,
+    										code,
+    										"number",
+    										attachments,
+		    								create_at,
+		    								update_at
+    									)
+    	VALUES 							(	#{declarationTypeId}, 
+    										#{name},
+    										#{code},
+    										#{number},
+    										#{attachments}::json,
+		    								NOW(),
+		    								NOW()
+    									)
+    </insert>
+    
+    <update id="updateDeclarationType" parameterType="WorklifeDeclarationTypeVO">
+    	SET search_path TO 'portal';
+    	UPDATE 	declaration_type
+    	SET		name 				= #{name},
+				code				= #{code},
+				"number"			= #{number},
+				attachments			= #{attachments}::json,
+		    	update_at 			= NOW()
+    	WHERE	declaration_type_id = #{declarationTypeId}
+    </update>
+    
+    <update id="updateDeclarationTypeNumber" parameterType="WorklifeDeclarationTypeVO">
+    	SET search_path TO 'portal';
+    	UPDATE 	declaration_type
+    	SET		"number"			= #{number}
+    	WHERE	declaration_type_id = #{declarationTypeId}
+    </update>
+    
+    <delete id="deleteDeclarationType" parameterType="String">
+    	SET search_path TO 'portal';
+    	DELETE 
+    	FROM 	declaration_type
+    	WHERE	declaration_type_id = #{declarationTypeId}
+    </delete>
+    
+    <select id="checkExistsDeclarationType" resultType="Boolean">
+    	SET search_path TO 'portal';
+    	SELECT 	COUNT(*) > 0
+    	FROM	declaration_type
+    	WHERE	declaration_type_id = #{declarationTypeId}
+    </select>
+
+    <select id="selectDeclarationType" parameterType="WorklifeDeclarationTypeVO" resultMap="WorklifeDeclarationType">
+    	SET search_path TO 'portal';
+        SELECT 	*
+        FROM 	declaration_type
+        WHERE	1 = 1
+        <if test="declarationTypeId != null and declarationTypeId != ''">
+        AND		declaration_type_id = #{declarationTypeId}
+        </if>
+		<if test="search != '' and search != null">
+        AND 	name LIKE CONCAT('%', #{search}, '%')
+        </if>
+        <if test="columnName != '' and columnName != null">
+            <if test="typeOrder != '' and typeOrder != null">
+                ORDER BY
+                <if test="columnName == 'name'">
+                    name
+                </if>
+                <if test="typeOrder == 'desc'">
+                    DESC
+                </if>
+                <if test="typeOrder == 'asc'">
+                    ASC
+                </if>
+            </if>
+        </if>
+        <if test="recordCountPerPage != 0 and recordCountPerPage != null and recordCountPerPage != '' and firstIndex != 0 and firstIndex != null and firstIndex != ''">
+        LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+        </if>
+    </select>
+
+    <select id="selectCountDeclarationType" parameterType="WorklifeDeclarationTypeVO" resultType="int">
+    	SET search_path TO 'portal';
+        SELECT 	COUNT(*)
+        FROM 	declaration_type
+        WHERE	1 = 1
+        <if test="declarationTypeId != null and declarationTypeId != ''">
+        AND		declaration_type_id = #{declarationTypeId}
+        </if>
+		<if test="search != '' and search != null">
+        AND 	name LIKE CONCAT('%', #{search}, '%')
+        </if>
+    </select>
+    
+    <select id="checkReceipCodeisExist" resultType="Boolean">
+    	SET search_path TO 'portal';
+        SELECT 	COUNT(*) > 0
+        FROM	declaration
+        WHERE	receipt_code		= #{receiptCode}
+    </select>
+</mapper>
